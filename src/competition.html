@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="applicable-device" content="pc,mobile" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@FES" />
+    <meta name="twitter:creator" content="@FES" />
+    <meta
+      property="og:url"
+      content="http://bits.blogs.nytimes.com/2011/12/08/a-twitter-for-my-sister/"
+    />
+    <meta property="og:title" content="FES联盟百万空投争霸赛" />
+    <meta
+      property="og:description"
+      content="我正在参与FES联盟百 万空投争霸赛，快来加 入赢取百万大奖吧！"
+    />
+    <meta
+      property="og:image"
+      content="http://static01.nyt.com/images/2015/02/19/arts/international/19iht-btnumbers19A/19iht-btnumbers19A-facebookJumbo-v2.jpg"
+    />
+
+    <title>FES 联盟百万空投争霸赛</title>
+    <link rel="stylesheet" href="./css/normal.css" />
+    <link rel="stylesheet" href="./css/competition.css" />
+
+    <!-- 先引入 Vue -->
+    <script src="./lib/vue.min.js"></script>
+    <!-- 引入axios第三方请求数据库 -->
+    <script src="./lib/axios.min.js"></script>
+
+    <script src="./js/event.js"></script>
+
+    <script src="./js/data.js"></script>
+  </head>
+  <body>
+    <div id="competition_page">
+      <div class="competition-top">
+        <div class="competition-center">
+          <div class="activity-time">
+            活动时间：{{config.time.desc}}
+            <span class="activity-time">共{{config.period}}期</span>
+          </div>
+
+          <div @click="goApp" class="team-btn f-jc-ac">创建战队参赛</div>
+          <a @click="goApp" class="link-btn">或搜索战队加入</a>
+
+          <div class="slogan">快来创建战队加入参与争霸活动，赢取奖励吧！</div>
+        </div>
+      </div>
+
+      <div
+        class="grid-step"
+        :style="`grid-template-columns: repeat(${activityList.length}, 1rem)`"
+      >
+        <div
+          class="cell f-fc-ac"
+          v-for="(el, idx) in activityList"
+          :key="idx"
+          :style="{ opacity: idx == currentIdx ? 1 : 0.5 }"
+        >
+          <img
+            style="width: 0.14rem; height: 0.14rem"
+            src="./images/point@2x.png"
+            alt=""
+          />
+          <div class="date-box">{{el.desc}}</div>
+          <div class="period">
+            {{`争霸赛${ idx + 1 > 9 ? idx : '0' + (idx + 1) }期`}}
+          </div>
+        </div>
+      </div>
+
+      <div class="activity-ranking">
+        <div class="title-box f-jc-ac">
+          <div class="en-title">ACTIVITY LIST</div>
+          <span class="title">活动榜单</span>
+        </div>
+
+        <div class="rule-desc" v-if="activityList[this.currentIdx]">
+          <div class="inside-box">
+            <div class="date">
+              {{activityList[this.currentIdx].start}}-{{activityList[this.currentIdx].end}}
+            </div>
+            <div style="width: 75%" class="rule">{{awardDesc.rankingDesc}}</div>
+          </div>
+        </div>
+
+        <div class="bg-box">
+          <div class="ranking-desc">
+            <div
+              @click="goApp"
+              v-for="el in tabList"
+              :key="el.code"
+              :class="{ 'active-tab': active === el.code }"
+              class="tab"
+            >
+              {{el.label}}
+            </div>
+          </div>
+
+          <div class="ranking-box f-fc">
+            <div class="competition-listdesc">
+              <div class="ranking">排名</div>
+              <div class="team-name">
+                <span style="transform: translateX(50%)"> 战队名 </span>
+              </div>
+              <div v-if="active !== 3" class="integral">总积分</div>
+            </div>
+
+            <div
+              class="competition-list"
+              v-if="leaderboardRes && leaderboardRes.length"
+            >
+              <div
+                class="competition-cell"
+                v-for="(el, idx) in leaderboardRes"
+                :key="el.clanId"
+              >
+                <div class="ranking" style="color: #654929">
+                  <div
+                    v-if="idx < 3"
+                    :style="{'background-image': `url(./images/top${idx+1}@2x.png)`}"
+                    class="bg-ranking"
+                  >
+                    {{idx + 1}}
+                  </div>
+
+                  <span v-else>{{idx + 1}}</span>
+                </div>
+                <div class="team-name">
+                  <img
+                    class="header"
+                    style="object-fit: cover"
+                    :src=" el.header ? el.header : header"
+                    alt=""
+                  />
+
+                  <div class="f-fc-jc">
+                    <div style="color: #654929">{{el.name}}</div>
+
+                    <div class="f-ac">
+                      <img
+                        style="margin-top: 0.04rem"
+                        class="star"
+                        v-for="(el, idx) in el.star"
+                        :key="idx"
+                        src="./images/star@2x.png"
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </div>
+                <span
+                  class="integral"
+                  v-if="active !== 3"
+                  style="color: #d88123"
+                  >{{Number(el.amount) | getW}}</span
+                >
+              </div>
+            </div>
+
+            <div
+              v-else
+              style="text-align: center; margin: 0.14rem 0"
+              class="desc"
+            >
+              暂无数据哦~
+            </div>
+
+            <div style="text-align: center" class="desc">
+              注：每日12:00更新排行榜，战队最终排名以本期活动结束为准！
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="activity-award">
+        <div class="title-box f-jc-ac">
+          <div class="en-title">ACTIVITY REWARD</div>
+          <span class="title">活动奖励</span>
+        </div>
+
+        <div class="rule-desc" v-if="activityList[this.currentIdx]">
+          <div class="inside-box">
+            <div class="date">
+              {{activityList[this.currentIdx].end}}时活动截止后
+            </div>
+            <div style="width: 96%" class="rule">{{awardDesc.awardDesc}}</div>
+          </div>
+        </div>
+
+        <div
+          :class="{'hide-top': currentIdx === 1}"
+          style="padding-bottom: 0.15rem"
+          class="bg-box"
+        >
+          <div class="list" v-if="currentIdx !== 1">
+            <template v-for="(el, idx) in list">
+              <div
+                v-if="!(currentIdx === 2 && el.code === 5)"
+                class="list-tab"
+                @click="() => {
+                  currentList = el.code
+                  getAward()
+                }"
+                :class="{ 'active-list-tab': currentList === el.code }"
+                :key="idx"
+              >
+                {{ currentIdx === 2 && el.code === '6_10' ? el.sub : el.label}}
+              </div>
+            </template>
+          </div>
+
+          <div style="padding: 0 0.1rem">
+            <div class="f-ac">
+              <div v-if="currentIdx === 2" class="award3">
+                <img
+                  src="./images/shib@2x.png"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                  alt=""
+                />
+              </div>
+
+              <div style="flex: 1">
+                <div class="award">{{awardDesc.awardTitle}}</div>
+                <pre class="award-desc">{{awardDesc.awardInfo}}</pre>
+              </div>
+            </div>
+            <div class="award-grid" v-if="currentIdx !== 2">
+              <div class="grid-cell" v-for="(el, idx) in awardData" :key="idx">
+                <img
+                  style="width: 0.54rem; height: 0.54rem; object-fit: cover"
+                  :src="el.url || header"
+                  alt=""
+                />
+                <div class="award-title" :title="el.name">{{el.name}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="activity-rule">
+        <div class="title-box f-jc-ac">
+          <div class="en-title">ACTIVITY RULES</div>
+          <span class="title">活动规则</span>
+        </div>
+
+        <div class="rule-list">
+          <div
+            @click="currentRule = el.code"
+            :style="{ opacity: currentRule === el.code ? 1 : 0.5 }"
+            class="rule-tab"
+            v-for="(el, idx) in ruleList"
+            :key="idx"
+          >
+            {{el.label}}
+          </div>
+        </div>
+
+        <div class="rule-details">
+          <div
+            class="rule-cell"
+            v-for="(el, idx) in currentRuleList"
+            :key="idx"
+          >
+            <div class="num">{{idx + 1}}.</div>
+            <pre class="details">{{el}}</pre>
+          </div>
+        </div>
+
+        <div style="text-align: center; line-height: 0.4rem" class="desc">
+          *本活动所有解释权归FES所有*
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    new Vue({
+      el: "#competition_page",
+      data() {
+        return {
+          // 当前显示榜单
+          active: 1,
+          tabList: [
+            {
+              code: 1,
+              label: "总榜",
+            },
+            {
+              code: 2,
+              label: "实力榜",
+            },
+            {
+              code: 3,
+              label: "战绩榜",
+            },
+          ],
+          activeDate: 1,
+          list: [
+            {
+              code: 1,
+              cycle1: 20,
+              cycle3: 35,
+              label: "冠军",
+            },
+            {
+              code: 2,
+              cycle1: 15,
+              cycle3: 20,
+              label: "亚军",
+            },
+            {
+              code: 3,
+              cycle1: 10,
+              cycle3: 10,
+              label: "季军",
+            },
+            {
+              code: 4,
+              cycle1: 8,
+              cycle3: 7,
+              label: "第四名",
+            },
+            {
+              code: 5,
+              cycle1: 7,
+              label: "第五名",
+            },
+            {
+              code: "6_10",
+              cycle1: 6,
+              cycle3: 3,
+              label: "第6-10名",
+              sub: "第5-10名",
+            },
+            {
+              code: "11_15",
+              cycle1: 5,
+              cycle3: 2,
+              label: "第11-15名",
+            },
+          ],
+          ruleList: [
+            {
+              label: "参赛规则",
+              code: "join",
+            },
+            {
+              label: "排行规则",
+              code: "ranking",
+            },
+            {
+              label: "奖励规则",
+              code: "award",
+            },
+            {
+              label: "其他规则",
+              code: "other",
+            },
+          ],
+          currentList: 1,
+          currentRule: "join",
+          header: "./images/icon-user-avatar.png",
+          awardDesc: {},
+          activityList: [],
+          config: { time: {} },
+          leaderboardRes: [],
+          currentIdx: 0,
+          awardData: [],
+        };
+      },
+      created() {
+        this.getMainData();
+      },
+      filters: {
+        getW(str) {
+          if (isNaN(Number(str))) {
+            return str;
+          } else {
+            return Math.floor((str / 10000) * 100) / 100 + "w";
+          }
+        },
+      },
+      computed: {
+        currentRuleList() {
+          return getRule(this.currentRule, this.activityList);
+        },
+      },
+      watch: {
+        currentIdx: {
+          immediate: true,
+          handler(val) {
+            this.currentList = 1;
+
+            this.awardDesc = getAwardDesc(
+              val || 0,
+              this.list.find((el) => el.code === this.currentList)
+            );
+          },
+        },
+        currentList() {
+          this.awardDesc = getAwardDesc(
+            this.currentIdx,
+            this.list.find((el) => el.code === this.currentList)
+          );
+        },
+      },
+      methods: {
+        goApp() {
+          console.log("ccc");
+        },
+
+        getCurrentNow() {
+          const now = Date.now();
+
+          this.activityList.forEach((el, index) => {
+            if (
+              now >
+                new Date(new Date().getFullYear() + "-" + el.start).valueOf() &&
+              now < new Date(new Date().getFullYear() + "-" + el.end).valueOf()
+            ) {
+              this.currentIdx = index;
+              this.getAward();
+            }
+          });
+        },
+
+        getAward() {
+          this.$nextTick(() => {
+            this.currentIdx !== 2 &&
+              POST(
+                "/rewardProps/main/rewardProps",
+                {
+                  gradeType:
+                    this.currentIdx + 1 === 1
+                      ? this.list.findIndex(
+                          (el) => el.code === this.currentList
+                        ) + 1
+                      : undefined,
+                  type: this.currentIdx + 1,
+                },
+                (res) => {
+                  this.awardData = [...(res.data || [])];
+                }
+              );
+          });
+        },
+
+        getMainData() {
+          POST("/clan/share", {}, (res) => {
+            const config = res.data?.config || {};
+
+            !config.time && (config.time = {});
+
+            const leaderboardRes = res.data?.leaderboardRes || [];
+
+            const activityList = [];
+
+            for (const key in config) {
+              const element = config[key];
+              if (key !== "period" && key !== "time") {
+                activityList.push(element);
+              }
+            }
+
+            this.activityList = [...activityList];
+
+            this.config = Object.assign({}, config);
+
+            this.getCurrentNow();
+            this.leaderboardRes = [...leaderboardRes];
+          });
+        },
+      },
+    });
+  </script>
+</html>

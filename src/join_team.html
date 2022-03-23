@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="applicable-device" content="pc,mobile" />
+    <title>同城秒约</title>
+    <link rel="stylesheet" href="./css/normal.css" />
+    <link rel="stylesheet" href="./css/join_team.css" />
+
+    <!-- 先引入 Vue -->
+    <script src="./lib/vue.min.js"></script>
+    <!-- 引入axios第三方请求数据库 -->
+    <script src="./lib/axios.min.js"></script>
+
+    <script src="./js/event.js"></script>
+
+    <script src="./js/data.js"></script>
+  </head>
+  <body>
+    <div id="join_team">
+      <div class="competition-top">
+        <div class="activity-time f-ac">
+          活动时间：{{config.time.desc}} 共{{config.period}}期
+        </div>
+
+        <div class="tip-info">
+          我的战队正在参与FES联盟百万空投争霸赛，快来加入战队赢取百万大奖吧!
+        </div>
+
+        <div class="team f-ac">
+          <img
+            class="header-img"
+            :src="details.header ? details.header : header"
+            alt=""
+          />
+
+          <div>
+            <div class="f-ac" style="margin-bottom: 0.06rem">
+              <div class="team-name">{{details.name}}</div>
+
+              <img
+                class="star"
+                v-for="(el, idx) in details.star || 3"
+                :key="idx"
+                src="./images/star@2x.png"
+                alt=""
+              />
+            </div>
+
+            <div class="id-count">ID:{{details.clanId}}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="desc-cell">创建时间：{{details.createdAt}}</div>
+      <div class="desc-cell">战队介绍：{{details.description || '-'}}</div>
+
+      <div class="cell">
+        <div class="title">战队成员</div>
+        <div class="value">{{details.memberCount}}人</div>
+      </div>
+      <div class="cell">
+        <div class="title">战队管理员</div>
+        <div class="value">共{{details.managerCount}}人</div>
+      </div>
+      <div class="cell">
+        <div class="title">战队累计参赛天数</div>
+        <div class="value">{{details.days}}天</div>
+      </div>
+      <div class="cell">
+        <div class="title">战队当前持有FEC总额</div>
+        <div class="value" style="color: #d88123">
+          {{Number(details.amount)}}
+        </div>
+      </div>
+
+      <div class="share-btn" @click="join">
+        <div class="inside-btn">加入战队</div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    new Vue({
+      el: "#join_team",
+      data() {
+        return {
+          config: {
+            time: {},
+          },
+          details: {},
+          header: "./images/icon-user-avatar.png",
+        };
+      },
+      created() {
+        this.getMainData();
+      },
+      methods: {
+        join() {},
+
+        getMainData() {
+          POST("/clan/share/detail", { clanId: 28 }, (res) => {
+            const config = res.data?.config || {};
+            !config.time && (config.time = {});
+
+            console.log(config);
+
+            this.config = Object.assign({}, config);
+            this.details = Object.assign({}, res.data || {});
+          });
+        },
+      },
+    });
+  </script>
+</html>

@@ -1,0 +1,112 @@
+#join_team {
+  width: 100%;
+  height: 100%;
+  background-color: #f1ece5;
+}
+
+.competition-top {
+  width: 100vw;
+  height: 4.3rem;
+  background-image: url(../images/banner-bg@2x.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  margin-bottom: 0.2rem;
+}
+
+.activity-time {
+  position: absolute;
+  top: 46%;
+  white-space: nowrap;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.14rem;
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 0.2rem;
+  letter-spacing: 0.05rem;
+  text-shadow: 0px 1px 0px #65331e;
+}
+
+.tip-info {
+  font-size: 0.15rem;
+  font-weight: 500;
+  position: absolute;
+  left: 0.16rem;
+  right: 0.16rem;
+  bottom: 1.05rem;
+  color: #ffffff;
+  line-height: 0.22rem;
+  text-shadow: 0px 1px 1px rgba(37, 23, 17, 0.86);
+}
+
+.team {
+  position: absolute;
+  left: 0.16rem;
+  bottom: 0.3rem;
+}
+
+.header-img {
+  width: 0.65rem;
+  height: 0.65rem;
+  margin-right: 0.1rem;
+}
+
+.star {
+  width: 0.21rem;
+  height: 0.19rem;
+}
+
+.team-name {
+  font-size: 0.17rem;
+  color: #ffffff;
+  line-height: 0.24rem;
+}
+
+.id-count {
+  font-size: 0.13rem;
+  color: #ede3ca;
+  line-height: 0.19rem;
+}
+
+.desc-cell {
+  font-size: 0.12rem;
+  color: #9c7b55;
+  line-height: 0.16rem;
+  margin: 0 0.14rem;
+  margin-bottom: 0.08rem;
+}
+
+.cell {
+  height: 0.38rem;
+  margin: 0 0.14rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.14rem;
+}
+
+.title {
+  color: #654929;
+}
+
+.value {
+  color: #251711;
+}
+
+.share-btn {
+  background: #654929;
+  border-radius: 0.04rem;
+  margin: 0.24rem 0.14rem;
+  padding: 0.03rem;
+}
+
+.inside-btn {
+  border-radius: 0.03rem;
+  border: 1px solid #c2b19d;
+  padding: 0.09rem 0;
+  text-align: center;
+  font-size: 0.18rem;
+  color: #f9f6f0;
+  line-height: 0.25rem;
+}
