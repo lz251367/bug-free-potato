@@ -510,8 +510,10 @@
           const callLib = new CallApp(options);
 
           callLib.open({
-            param: {},
-            path: "competition",
+            param: {
+              path: "competition",
+            },
+            path: "",
           });
         },
 
