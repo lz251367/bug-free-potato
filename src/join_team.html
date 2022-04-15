@@ -170,6 +170,7 @@
           config: {
             time: {},
           },
+          clanId: 0,
           details: {},
           header: "./images/icon-user-avatar.png",
         };
@@ -177,7 +178,7 @@
       created() {
         const myURL = new URL(location.href);
         const language = myURL.searchParams.get("language");
-
+        this.clanId = myURL.searchParams.get("clanId");
         i18n.locale = language || "cn";
         this.getMainData();
       },
@@ -194,7 +195,9 @@
           const callLib = new CallApp(options);
 
           callLib.open({
-            param: {},
+            param: {
+              clanId: this.clanId,
+            },
             path: "",
           });
         },
