@@ -189,7 +189,7 @@
               protocol: "fes5",
             },
             fallback: "https://www.baidu.com",
-            timeout: 5000,
+            timeout: 15000,
           };
 
           const callLib = new CallApp(options);
@@ -198,12 +198,12 @@
             param: {
               clanId: this.clanId,
             },
-            path: "",
+            path: "team_details",
           });
         },
 
         getMainData() {
-          POST("/clan/share/detail", { clanId: 28 }, (res) => {
+          POST("/clan/share/detail", { clanId: this.clanId }, (res) => {
             const config = res.data?.config || {};
             !config.time && (config.time = {});
 
