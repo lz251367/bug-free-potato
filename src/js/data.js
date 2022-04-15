@@ -1,93 +1,47 @@
-function getRule(status, list) {
+function getRule(status) {
   switch (status) {
-    case 'join':
-      return [
-        '必须创建战队或者加入别的战队才可以参与本次活动，用户只能创建一个战队或加入一个战队，战队人数上限为500人。',
-        '在当日23:00时前战队总持有FEC总额（战队成员钱包FEC总额）达到2800万FEC及以上会自动参赛，否则没有参赛资格(即当日不会参赛，实力、战绩不被统计到实力榜、战绩榜、总榜。',
-        '战队参赛天数>=25天才有资格参与最后的奖励排行。',
-        '若用户个人总持有FEC总额达到2800万，也可以创建战队参赛。',
-      ];
+    case "join":
+      return ["ruleDesc1", "ruleDesc2", "ruleDesc3", "ruleDesc4"];
 
-    case 'ranking':
-      return [
-        '实力榜：统计战队昨日23:00时总持有FEC总额，每日更新排名并汇总，最终形成战队昨日、本周、本月实力榜。',
-        '战绩榜：统计战队成员上一轮中标金额总和，每日更新排名并汇总，最终形成战队昨日、本周、本月战绩榜和胜率榜。',
-        '总榜：总榜排行=战队本月实力排行*30%权重+战队本月战绩排行*70%权重；总榜每月1-25日每日更新排名并汇总积分；当月26日12:00后只有参赛天数>=25天的战队，才有资格参加总榜排行，争霸排名前15的战队奖励名额。',
-        `其他：战队数据从创建后开始统计参赛数据，成员贡献值则从加入战队后开始统计；当战队或成员数据分一致时，按战队创建时间、成员加入时间先后分出排名；每日12:00点后发布总榜、实力榜、战绩榜排名。
-    
-战队按实力每日23:00时划分星级显示：
-战队实力             \u3000\u0020星级
-2800W以下           \u3000\u0020无星
-2800W~4000W           *   
-4000W~5000W           **
-5000W-6000W           ***
-6000W-7000W           ****
-7000W以上           \u3000\u0020*****
-注：不包含第二个区间值`,
-      ];
+    case "ranking":
+      return ["ruleDesc5", "ruleDesc6", "ruleDesc7", "ruleDesc8"];
 
-    case 'award':
-      return [
-        `争霸赛01期奖励（(${list[0].desc})）：
-第一个月排名前15的战队，可以获得限量【勇敢小兵】头像道具奖励，限量115个（普通）：          
-排名第一的战队可以获得20个头像道具          
-排名第二的战队可以获得15个头像道具          
-排名第三的战队可以获得10个NF 头像          
-排名第四的战队可以获得8个头像道具          
-排名第五的战队可以获得7个头像道具          
-排名第六到第十的战队可以获得6个头像道具          
-排名第十一到十五的战队可以获得5个头像道具
-注：战队内贡献值排名前者可以获得限量头像，战队内成员贡献值计算方法，每月竞投的金额累计排行。队员限量的头像道具每次竞投时对应五行金额上限可以增加0.2%，有效期为发放后的一个月内。奖励都发放给队长，队长授予队员头像道具。`,
-        `争霸赛02期奖励（(${list[1].desc})）：
-第二个月排名前15的战队，队长每人获得一个专属【勇敢小将】头像道具奖励，限量15个（稀有），队长的头像道具每次竞投时对应五行金额上限增加0.5%。`,
-        `争霸赛03期奖励（(${list[2].desc})）：
-第三个月排名前15的战队，按照排名获得总价值100万美金的SHIB空投。          
-排名第一的战队可以获得空投总额的40%奖励 35万美金          
-排名第二的战队可以获得空投总额的20%奖励 10万美金          
-排名第三的战队可以获得空投总额的10%奖励 10万美金          
-排名第四的战队可以获得空投总额的5%奖励  7万美金
-排名第五到第十的战队，每个战队可以获得空投总额的3%奖励 3万美金
-排名第十一到第十五的战队，每个战队可以获得空投总额的2%奖励 2万美金
-注：每个战队的奖金，会分给队长，然后由队长来分配。`,
-      ];
+    case "award":
+      return ["ruleDesc9", "ruleDesc10", "ruleDesc11"];
 
-    case 'other':
-      return [
-        '战队总持有FEC总额达到2800万FEC会自动参赛，参赛的战队成员在每一轮竞投获胜时需要支付获胜金额的10%作为争霸赛的额外手续费。',
-      ];
+    case "other":
+      return ["ruleDesc12"];
     default:
       return [];
   }
 }
 
-function getAwardDesc(status, val = {}) {
+function getAwardDesc(status) {
   const obj = {
-    rankingDesc: '',
-    awardDesc: '',
-    awardTitle: '',
-    awardInfo: '',
+    rankingDesc: "",
+    awardDesc: "",
+    awardTitle: "",
+    awardInfo: "",
   };
 
   switch (status) {
     case 0:
-      obj.rankingDesc = '总榜排名前15的战队，可以获得限量NFT头像 由队长根据战队成员贡献值排名授予成员';
-      obj.awardDesc = '总榜排名前15的战队，将按名次发放限量NFT头像给队长';
-      obj.awardTitle = `限量普通头像道具：勇敢小兵*${val.cycle1}`;
-      obj.awardInfo = `说明：争霸赛01期${val.label}战队可以获得${val.cycle1}个限量头像道具奖励，队长收到奖励后按战队贡献值排名授予成员头像道具。
-属性：共有金木水火土五种属性的头像道具，竞投对应的五行时，其竞投金额增幅0.2%，有效期为发放日起一个月内。`;
+      obj.rankingDesc = "awardDesc1";
+      obj.awardDesc = "awardDesc2";
+      obj.awardTitle = "awardDesc3";
+      obj.awardInfo = "awardDesc4";
       break;
     case 1:
-      obj.rankingDesc = '总榜排名前15的战队，队长可以获得专属稀有头像道具';
-      obj.awardDesc = '总榜排名前15的战队，将按名次发放专属稀有头像道具给队长';
-      obj.awardTitle = '专属稀有头像道具：勇敢小将*15';
-      obj.awardInfo = `说明：争霸赛02期排名前15的战队队长可以获得专属稀有头像道具。
-属性：拥有该头像道具，每次竞投对应的五行时，其竞投金额增幅0.5%，有效期为发放日起一个月内。`;
+      obj.rankingDesc = "awardDesc5";
+      obj.awardDesc = "awardDesc6";
+      obj.awardTitle = "awardDesc7";
+      obj.awardInfo = "awardDesc8";
       break;
     case 2:
-      obj.rankingDesc = '总榜排名前15的战队，合分总价值100万美金的SHIB空投奖励战队奖金发放给队长，由队长统筹分配';
-      obj.awardDesc = '总榜排名前15的战队，合分总价值100万美金的SHIB空投奖励';
-      obj.awardTitle = `${val.cycle3}万美金SHIB空投`;
-      obj.awardInfo = `说明：${val.label}战队可以获得总价值${val.cycle3}万美金的SHIB空投奖励，队长收到空投奖励后统筹分配。`;
+      obj.rankingDesc = "awardDesc9";
+      obj.awardDesc = "awardDesc10";
+      obj.awardTitle = "awardDesc11";
+      obj.awardInfo = "awardDesc12";
       break;
   }
 

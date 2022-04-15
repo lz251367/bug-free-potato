@@ -12,17 +12,20 @@
       property="og:url"
       content="https://lz251367.github.io/bug-free-potato/src/competition.html"
     />
-    <meta property="og:title" content="FES联盟百万空投争霸赛" />
+    <meta
+      property="og:title"
+      content="FES Alliance Million Airdrop Competition"
+    />
     <meta
       property="og:description"
-      content="我正在参与FES联盟百 万空投争霸赛，快来加 入赢取百万大奖吧！"
+      content="I am participating in the FES Alliance Million Airdrop Competition, come and join to win a million prizes!"
     />
     <meta
       property="og:image"
       content="https://fes-dapp.oss-ap-southeast-1.aliyuncs.com/upload/1686fa53d67f46638d15af6e12303bd8"
     />
 
-    <title>FES 联盟百万空投争霸赛</title>
+    <title>FES Alliance Million Airdrop Tournament</title>
     <link rel="stylesheet" href="./css/normal.css" />
     <link rel="stylesheet" href="./css/competition.css" />
 
@@ -30,24 +33,41 @@
     <script src="./lib/vue.min.js"></script>
     <!-- 引入axios第三方请求数据库 -->
     <script src="./lib/axios.min.js"></script>
+    <script src="./lib/vue-i18n.min.js"></script>
+    <script src="./lib/callapp-lib.js"></script>
 
     <script src="./js/event.js"></script>
 
     <script src="./js/data.js"></script>
+
+    <script src="./i18n/zh-cn.js"></script>
+    <script src="./i18n/zh-tw.js"></script>
+    <script src="./i18n/en.js"></script>
+    <script src="./i18n/ja.js"></script>
+    <script src="./i18n/ko.js"></script>
+    <script src="./i18n/ar.js"></script>
+    <script src="./i18n/ms.js"></script>
+    <script src="./i18n/tr.js"></script>
+    <script src="./i18n/vi.js"></script>
+    <script src="./i18n/id.js"></script>
   </head>
   <body>
     <div id="competition_page">
       <div class="competition-top">
         <div class="competition-center">
           <div class="activity-time">
-            活动时间：{{config.time.desc}}
-            <span class="activity-time">共{{config.period}}期</span>
+            {{$t('lang.lotteryRuleTitle2')}}{{config.time.desc}}
+            <span class="activity-time"
+              >{{$t('lang.total_issues', [config.period])}}</span
+            >
           </div>
 
-          <div @click="goApp" class="team-btn f-jc-ac">创建战队参赛</div>
-          <a @click="goApp" class="link-btn">或搜索战队加入</a>
+          <div @click="goApp" class="team-btn f-jc-ac">
+            {{$t('lang.exitTip3')}}
+          </div>
+          <a @click="goApp" class="link-btn">{{$t('lang.exitTip4')}}</a>
 
-          <div class="slogan">快来创建战队加入参与争霸活动，赢取奖励吧！</div>
+          <div class="slogan">{{$t('lang.exitTip5')}}</div>
         </div>
       </div>
 
@@ -68,7 +88,7 @@
           />
           <div class="date-box">{{el.desc}}</div>
           <div class="period">
-            {{`争霸赛${ idx + 1 > 9 ? idx : '0' + (idx + 1) }期`}}
+            {{ $t('lang.cycle', [idx + 1 > 9 ? idx : '0' + (idx + 1) ])}}
           </div>
         </div>
       </div>
@@ -76,7 +96,7 @@
       <div class="activity-ranking">
         <div class="title-box f-jc-ac">
           <div class="en-title">ACTIVITY LIST</div>
-          <span class="title">活动榜单</span>
+          <span class="title">{{$t('lang.Activity_list')}}</span>
         </div>
 
         <div class="rule-desc" v-if="activityList[this.currentIdx]">
@@ -84,7 +104,9 @@
             <div class="date">
               {{activityList[this.currentIdx].start}}-{{activityList[this.currentIdx].end}}
             </div>
-            <div style="width: 75%" class="rule">{{awardDesc.rankingDesc}}</div>
+            <div style="width: 75%" class="rule">
+              {{$t(`lang.${awardDesc.rankingDesc}`)}}
+            </div>
           </div>
         </div>
 
@@ -97,17 +119,21 @@
               :class="{ 'active-tab': active === el.code }"
               class="tab"
             >
-              {{el.label}}
+              {{$t(`lang.${el.label}`)}}
             </div>
           </div>
 
           <div class="ranking-box f-fc">
             <div class="competition-listdesc">
-              <div class="ranking">排名</div>
+              <div class="ranking">{{$t('lang.rank')}}</div>
               <div class="team-name">
-                <span style="transform: translateX(50%)"> 战队名 </span>
+                <span style="transform: translateX(50%)">
+                  {{$t('lang.team_name')}}
+                </span>
               </div>
-              <div v-if="active !== 3" class="integral">总积分</div>
+              <div v-if="active !== 3" class="integral">
+                {{$t('lang.total_points')}}
+              </div>
             </div>
 
             <div
@@ -167,11 +193,11 @@
               style="text-align: center; margin: 0.14rem 0"
               class="desc"
             >
-              暂无数据哦~
+              {{$t('lang.emptyDesc')}}
             </div>
 
             <div style="text-align: center" class="desc">
-              注：每日12:00更新排行榜，战队最终排名以本期活动结束为准！
+              {{$t('lang.ActivitytimeDesc3')}}
             </div>
           </div>
         </div>
@@ -180,15 +206,18 @@
       <div class="activity-award">
         <div class="title-box f-jc-ac">
           <div class="en-title">ACTIVITY REWARD</div>
-          <span class="title">活动奖励</span>
+          <span class="title"> {{$t('lang.Activity_Award')}}</span>
         </div>
 
         <div class="rule-desc" v-if="activityList[this.currentIdx]">
           <div class="inside-box">
             <div class="date">
-              {{activityList[this.currentIdx].end}}时活动截止后
+              {{$t('lang.ActivityEndDesc',
+              [activityList[this.currentIdx].end])}}
             </div>
-            <div style="width: 96%" class="rule">{{awardDesc.awardDesc}}</div>
+            <div style="width: 96%" class="rule">
+              {{$t(`lang.${awardDesc.awardDesc}`)}}
+            </div>
           </div>
         </div>
 
@@ -209,7 +238,8 @@
                 :class="{ 'active-list-tab': currentList === el.code }"
                 :key="idx"
               >
-                {{ currentIdx === 2 && el.code === '6_10' ? el.sub : el.label}}
+                {{ currentIdx === 2 && el.code === '6_10' ? $t(`lang.${el.sub}`)
+                : $t(`lang.${el.label}`)}}
               </div>
             </template>
           </div>
@@ -225,8 +255,13 @@
               </div>
 
               <div style="flex: 1">
-                <div class="award">{{awardDesc.awardTitle}}</div>
-                <pre class="award-desc">{{awardDesc.awardInfo}}</pre>
+                <div class="award">
+                  {{$t(`lang.${awardDesc.awardTitle}`, [currentIdx == 2 ?
+                  currentListCopy.cycle3 : currentListCopy.cycle1])}}
+                </div>
+                <pre class="award-desc">
+{{$t(`lang.${awardDesc.awardInfo}`, [currentListCopy.label, currentIdx == 2 ? currentListCopy.cycle3 : currentListCopy.cycle1])}}</pre
+                >
               </div>
             </div>
             <div class="award-grid" v-if="currentIdx !== 2">
@@ -246,7 +281,7 @@
       <div class="activity-rule">
         <div class="title-box f-jc-ac">
           <div class="en-title">ACTIVITY RULES</div>
-          <span class="title">活动规则</span>
+          <span class="title">{{$t('lang.Activity_Rules')}}</span>
         </div>
 
         <div class="rule-list">
@@ -257,7 +292,7 @@
             v-for="(el, idx) in ruleList"
             :key="idx"
           >
-            {{el.label}}
+            {{$t(`lang.${el.label}`)}}
           </div>
         </div>
 
@@ -268,20 +303,70 @@
             :key="idx"
           >
             <div class="num">{{idx + 1}}.</div>
-            <pre class="details">{{el}}</pre>
+            <pre class="details">
+{{$t(`lang.${el}`, [ activityList[idx] && activityList[idx].desc])}}</pre
+            >
           </div>
         </div>
 
         <div style="text-align: center; line-height: 0.4rem" class="desc">
-          *本活动所有解释权归FES所有*
+          {{$t('lang.botomDesc')}}
         </div>
       </div>
     </div>
   </body>
 
   <script>
+    const i18n = new VueI18n({
+      locale: "cn", // 语言标识
+      //this.$i18n.locale // 通过切换locale的值来实现语言切换
+      messages: {
+        en: {
+          //英文
+          lang: EN, //从其他js返回的语言包（根据项目自己手写）
+        },
+        cn: {
+          //简体
+          lang: CN,
+        },
+        tw: {
+          //繁体
+          lang: TW,
+        },
+        ja: {
+          //日语
+          lang: JP,
+        },
+        ko: {
+          //韩语
+          lang: KO,
+        },
+        ar: {
+          //阿拉伯
+          lang: AR,
+        },
+        ms: {
+          //马来
+          lang: MS,
+        },
+        tr: {
+          //土耳其语
+          lang: TR,
+        },
+        vi: {
+          // 越南
+          lang: VN,
+        },
+        id: {
+          // 印尼
+          lang: ID,
+        },
+      },
+    });
+
     new Vue({
       el: "#competition_page",
+      i18n,
       data() {
         return {
           // 当前显示榜单
@@ -289,15 +374,15 @@
           tabList: [
             {
               code: 1,
-              label: "总榜",
+              label: "rankType1",
             },
             {
               code: 2,
-              label: "实力榜",
+              label: "rankType2",
             },
             {
               code: 3,
-              label: "战绩榜",
+              label: "rankType3",
             },
           ],
           activeDate: 1,
@@ -306,60 +391,60 @@
               code: 1,
               cycle1: 20,
               cycle3: 35,
-              label: "冠军",
+              label: "rank1",
             },
             {
               code: 2,
               cycle1: 15,
               cycle3: 20,
-              label: "亚军",
+              label: "rank2",
             },
             {
               code: 3,
               cycle1: 10,
               cycle3: 10,
-              label: "季军",
+              label: "rank3",
             },
             {
               code: 4,
               cycle1: 8,
               cycle3: 7,
-              label: "第四名",
+              label: "rank4",
             },
             {
               code: 5,
               cycle1: 7,
-              label: "第五名",
+              label: "rank5",
             },
             {
               code: "6_10",
               cycle1: 6,
               cycle3: 3,
-              label: "第6-10名",
-              sub: "第5-10名",
+              label: "rank6",
+              sub: "rank6",
             },
             {
               code: "11_15",
               cycle1: 5,
               cycle3: 2,
-              label: "第11-15名",
+              label: "rank7",
             },
           ],
           ruleList: [
             {
-              label: "参赛规则",
+              label: "rule1",
               code: "join",
             },
             {
-              label: "排行规则",
+              label: "rule2",
               code: "ranking",
             },
             {
-              label: "奖励规则",
+              label: "rule3",
               code: "award",
             },
             {
-              label: "其他规则",
+              label: "rule4",
               code: "other",
             },
           ],
@@ -375,6 +460,10 @@
         };
       },
       created() {
+        const myURL = new URL(location.href);
+        const language = myURL.searchParams.get("language");
+
+        i18n.locale = language || "cn";
         this.getMainData();
       },
       filters: {
@@ -388,7 +477,11 @@
       },
       computed: {
         currentRuleList() {
-          return getRule(this.currentRule, this.activityList);
+          return getRule(this.currentRule);
+        },
+
+        currentListCopy() {
+          return this.list.find((el) => el.code === this.currentList);
         },
       },
       watch: {
@@ -397,22 +490,29 @@
           handler(val) {
             this.currentList = 1;
 
-            this.awardDesc = getAwardDesc(
-              val || 0,
-              this.list.find((el) => el.code === this.currentList)
-            );
+            this.awardDesc = getAwardDesc(val || 0);
           },
         },
         currentList() {
-          this.awardDesc = getAwardDesc(
-            this.currentIdx,
-            this.list.find((el) => el.code === this.currentList)
-          );
+          this.awardDesc = getAwardDesc(this.currentIdx);
         },
       },
       methods: {
         goApp() {
-          console.log("ccc");
+          const options = {
+            scheme: {
+              protocol: "fes5",
+            },
+            fallback: "https://www.baidu.com",
+            timeout: 5000,
+          };
+
+          const callLib = new CallApp(options);
+
+          callLib.open({
+            param: {},
+            path: "",
+          });
         },
 
         getCurrentNow() {
