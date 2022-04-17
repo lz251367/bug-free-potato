@@ -77,13 +77,13 @@
               />
             </div>
 
-            <div class="id-count">ID:{{details.clanId}}</div>
+            <div class="id-count">ID:{{details.clanId || '-'}}</div>
           </div>
         </div>
       </div>
 
       <div class="desc-cell">
-        {{$t('lang.create_time')}}{{details.createdAt}}
+        {{$t('lang.create_time')}}{{details.createdAt || '-'}}
       </div>
       <div class="desc-cell">
         {{$t('lang.Team_introduction1')}}{{details.description || '-'}}
@@ -91,20 +91,22 @@
 
       <div class="cell">
         <div class="title">{{$t('lang.team_members')}}</div>
-        <div class="value">{{details.memberCount}}{{$t('lang.man')}}</div>
+        <div class="value">{{details.memberCount || 0}}{{$t('lang.man')}}</div>
       </div>
       <div class="cell">
         <div class="title">{{$t('lang.team_captain')}}</div>
-        <div class="value">{{$t('lang.totalman', [details.managerCount])}}</div>
+        <div class="value">
+          {{$t('lang.totalman', [details.managerCount || 0])}}
+        </div>
       </div>
       <div class="cell">
         <div class="title">{{$t('lang.otherDesc1')}}</div>
-        <div class="value">{{details.days}}{{$t('lang.day1')}}</div>
+        <div class="value">{{details.days || 0}}{{$t('lang.day1')}}</div>
       </div>
       <div class="cell">
         <div class="title">{{$t('lang.team_details_desc3')}}</div>
         <div class="value" style="color: #d88123">
-          {{Number(details.amount)}}
+          {{Number(details.amount || 0)}}
         </div>
       </div>
 
@@ -180,7 +182,9 @@
         const language = myURL.searchParams.get("language");
         this.clanId = myURL.searchParams.get("clanId");
         i18n.locale = language || "cn";
-        this.getMainData();
+        this.$nextTick(() => {
+          this.getMainData();
+        });
       },
       methods: {
         join() {
@@ -197,13 +201,15 @@
           callLib.open({
             param: {
               clanId: this.clanId,
-              path: 'team_details'
+              path: "team_details",
             },
             path: "",
           });
         },
 
         getMainData() {
+          console.log(this.clanId);
+
           POST("/clan/share/detail", { clanId: this.clanId }, (res) => {
             const config = res.data?.config || {};
             !config.time && (config.time = {});
