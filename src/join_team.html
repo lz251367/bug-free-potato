@@ -106,7 +106,7 @@
       <div class="cell">
         <div class="title">{{$t('lang.team_details_desc3')}}</div>
         <div class="value" style="color: #d88123">
-          {{Number(details.amount || 0)}}
+          {{Number(details.amount || 0) | getW}}
         </div>
       </div>
 
@@ -185,6 +185,15 @@
         this.$nextTick(() => {
           this.getMainData();
         });
+      },
+      filters: {
+        getW(str) {
+          if (isNaN(Number(str))) {
+            return str;
+          } else {
+            return Math.floor((str / 10000) * 100) / 100 + "w";
+          }
+        },
       },
       methods: {
         join() {
