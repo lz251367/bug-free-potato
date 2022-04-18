@@ -14,7 +14,7 @@ window.onload = () => {
   setRem();
 };
 
-const baseURL = 'https://api.fes5.net/test';
+const baseURL = 'http://47.241.214.126:8099/';
 
 const POST = function (url, data, cb = () => {}, errCb = () => {}) {
   axios({
